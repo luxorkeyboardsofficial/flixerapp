@@ -1,61 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flixer PWA</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <script>
-        let deferredPrompt;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Flixer</title>
 
-        // Listen for the beforeinstallprompt event
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent the default browser prompt
-            e.preventDefault();
-            // Store the event for later use
-            deferredPrompt = e;
-            // Show the custom install button
-            const installButton = document.getElementById('installButton');
-            if (installButton) {
-                installButton.style.display = 'block';
-            }
-        });
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000"/>
 
-        // Register the Service Worker on page load
-        window.addEventListener('load', () => {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Service Worker registered', reg))
-                    .catch(err => console.log('Service Worker registration failed', err));
-            }
-        });
+  <!-- iOS support -->
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-        // Function to trigger the install prompt
-        function showInstallPrompt() {
-            if (deferredPrompt) {
-                // Show the browser's install prompt
-                deferredPrompt.prompt();
-                // Check the user's choice
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
-                    } else {
-                        console.log('User dismissed the install prompt');
-                    }
-                    // Reset the deferredPrompt
-                    deferredPrompt = null;
-                });
-            }
-        }
-    </script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
-    <div class="iframe-container">
-        <iframe src="https://flixer.su/" frameborder="0"></iframe>
-    </div>
-    <button id="installButton" onclick="showInstallPrompt()" style="display: none; position: fixed; top: 10px; right: 10px; z-index: 1000;">
-        Install App
-    </button>
+  <iframe src="https://flixer.su/" allowfullscreen></iframe>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
 </body>
 </html>
